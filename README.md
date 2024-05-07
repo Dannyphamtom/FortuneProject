@@ -10,7 +10,7 @@ Auto Scaling
 Create an AMI from that VM and put it in an autoscaling group so one VM always exists.
 Put a Elastic Load Balancer infront of that VM and load balance between two Availability Zones (one EC2 in each AZ).
 Checkpoint: You can view a simple HTML page served from both of your EC2 instances. You can turn one off and your website is still accessible.
-![alt text](image.png)
+
 External Data
 
 Create a DynamoDB table and experiment with loading and retrieving data manually, then do the same via a script on your local machine.
@@ -86,3 +86,6 @@ IAM: You should really learn how to create complex IAM Policies. You would have 
 Networking: Create a new VPC from scratch with multiple subnets (you'll learn a LOT of networking concepts), once that is working create another VPC and peer them together. Get a VM in each subnet to talk to eachother using only their private IP addresses.
 
 KMS: Go back and redo the early EC2 instance goals but enable encryption on the disk volumes. Learn how to encrypt an AMI.
+
+
+[def]: image.png
