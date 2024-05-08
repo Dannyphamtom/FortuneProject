@@ -18,17 +18,29 @@ def handler(event, context):
                 fortune = response['Items'][0].get('Fortunes')  # Change from 'fortune' to 'fortunes'
                 return {
                     'statusCode': 200,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                    },
                     'body': json.dumps({'Fortunes': fortune})
                 }
             else:
                 return {
                     'statusCode': 404,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                    },
                     'body': json.dumps({'error': 'No fortunes found'})
                 }
         elif event['httpMethod'] == 'POST':
             if 'body' not in event or not event['body']:
                 return {
                     'statusCode': 400,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                    },
                     'body': json.dumps({'error': 'Missing request body'})
                 }
 
@@ -38,6 +50,10 @@ def handler(event, context):
                 if not fortune:
                     return {
                         'statusCode': 400,
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                        },
                         'body': json.dumps({'error': 'Missing fortune in request body'})
                     }
 
@@ -49,22 +65,38 @@ def handler(event, context):
 
                 return {
                     'statusCode': 200,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                    },
                     'body': json.dumps({'message': 'Fortune submitted successfully'})
                 }
             except Exception as e:
                 print('Error:', e)
                 return {
                     'statusCode': 500,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                    },
                     'body': json.dumps({'error': 'Internal Server Error'})
                 }
         else:
             return {
                 'statusCode': 405,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                },
                 'body': json.dumps({'error': 'Method Not Allowed'})
             }
     except Exception as e:
         print('Error:', e)
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+            },
             'body': json.dumps({'error': 'Internal Server Error'})
         }
