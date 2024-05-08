@@ -10,12 +10,12 @@ def handler(event, context):
         if event['httpMethod'] == 'GET':
             # Query DynamoDB to get a random fortune
             response = dynamodb.scan(
-                TableName='Fortunes-Table', # Your table name, in this case mine was "Fortunes-Table" case sensitive
+                TableName='Fortunes-Table',
                 Select='ALL_ATTRIBUTES',
                 Limit=1
             )
             if 'Items' in response and len(response['Items']) > 0:
-                fortune = response['Items'][0].get('Fortunes')  # Your partition key name, mine was "Fortunes" case sensitive
+                fortune = response['Items'][0].get('Fortunes')  # Change from 'fortune' to 'fortunes'
                 return {
                     'statusCode': 200,
                     'body': json.dumps({'Fortunes': fortune})
@@ -26,24 +26,37 @@ def handler(event, context):
                     'body': json.dumps({'error': 'No fortunes found'})
                 }
         elif event['httpMethod'] == 'POST':
-            request_body = json.loads(event['body'])
-            fortune = request_body.get('Fortunes')  
-            if not fortune:
+            if 'body' not in event or not event['body']:
                 return {
                     'statusCode': 400,
-                    'body': json.dumps({'error': 'Missing fortune in request body'})
+                    'body': json.dumps({'error': 'Missing request body'})
                 }
 
-            # Put the new fortune into DynamoDB
-            dynamodb.put_item(
-                TableName='Fortunes-Table',
-                Item={'Fortunes': {'S': fortune}}  
-            )
+            try:
+                request_body = json.loads(event['body'])
+                fortune = request_body.get('Fortunes')  # Change from 'fortune' to 'fortunes'
+                if not fortune:
+                    return {
+                        'statusCode': 400,
+                        'body': json.dumps({'error': 'Missing fortune in request body'})
+                    }
 
-            return {
-                'statusCode': 200,
-                'body': json.dumps({'message': 'Fortune submitted successfully'})
-            }
+                # Put the new fortune into DynamoDB
+                dynamodb.put_item(
+                    TableName='Fortunes-Table',
+                    Item={'Fortunes': {'S': fortune}}  # Change from 'fortune' to 'fortunes'
+                )
+
+                return {
+                    'statusCode': 200,
+                    'body': json.dumps({'message': 'Fortune submitted successfully'})
+                }
+            except Exception as e:
+                print('Error:', e)
+                return {
+                    'statusCode': 500,
+                    'body': json.dumps({'error': 'Internal Server Error'})
+                }
         else:
             return {
                 'statusCode': 405,
@@ -55,4 +68,3 @@ def handler(event, context):
             'statusCode': 500,
             'body': json.dumps({'error': 'Internal Server Error'})
         }
-
