@@ -7,28 +7,37 @@ dynamodb = boto3.client('dynamodb')
 # Handler function
 def handler(event, context):
     try:
-        if event.get('httpMethod') == 'GET':
+        if event['httpMethod'] == 'GET':
             # Query DynamoDB to get a random fortune
             response = dynamodb.scan(
-                TableName='FortunesTable',
+                TableName='Fortunes-Table', # Your table name, in this case mine was "Fortunes-Table" case sensitive
                 Select='ALL_ATTRIBUTES',
-                ScanIndexForward=False,  # Get items in descending order
-                Limit=1  # Limit to 1 item
+                Limit=1
             )
-            fortune = response['Items'][0]['fortune']
-
-            return {
-                'statusCode': 200,
-                'body': json.dumps({'fortune': fortune})
-            }
-        elif event.get('httpMethod') == 'POST':
+            if 'Items' in response and len(response['Items']) > 0:
+                fortune = response['Items'][0].get('Fortunes')  # Your partition key name, case sensitive
+                return {
+                    'statusCode': 200,
+                    'body': json.dumps({'Fortunes': fortune})
+                }
+            else:
+                return {
+                    'statusCode': 404,
+                    'body': json.dumps({'error': 'No fortunes found'})
+                }
+        elif event['httpMethod'] == 'POST':
             request_body = json.loads(event['body'])
-            fortune = request_body['fortune']
+            fortune = request_body.get('Fortunes')  
+            if not fortune:
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({'error': 'Missing fortune in request body'})
+                }
 
             # Put the new fortune into DynamoDB
             dynamodb.put_item(
-                TableName='FortunesTable',
-                Item={'fortune': {'S': fortune}}
+                TableName='Fortunes-Table',
+                Item={'Fortunes': {'S': fortune}}  
             )
 
             return {
