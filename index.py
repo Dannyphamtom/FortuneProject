@@ -15,7 +15,7 @@ def handler(event, context):
                 Limit=1
             )
             if 'Items' in response and len(response['Items']) > 0:
-                fortune = response['Items'][0].get('Fortunes')  # Your partition key name, case sensitive
+                fortune = response['Items'][0].get('Fortunes')  # Your partition key name, mine was "Fortunes" case sensitive
                 return {
                     'statusCode': 200,
                     'body': json.dumps({'Fortunes': fortune})
