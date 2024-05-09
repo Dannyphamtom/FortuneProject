@@ -24,7 +24,7 @@ def handler(event, context):
                     'statusCode': 200,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com',
+                        'Access-Control-Allow-Origin': 'https://dannypham.w3spaces.com', # change to s3 bucket?
                     },
                     'body': json.dumps({'Fortunes': fortune})
                 }
