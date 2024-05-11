@@ -1,5 +1,6 @@
 import json
 import boto3
+import random
 
 # Initialize DynamoDB client
 dynamodb = boto3.client('dynamodb')
@@ -8,15 +9,30 @@ dynamodb = boto3.client('dynamodb')
 def handler(event, context):
     try:
         if event['httpMethod'] == 'GET':
-            # Your existing GET request handling code
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
-                },
-                'body': json.dumps({'message': 'GET request received'})
-            }
+            # Retrieve a random item from the DynamoDB table
+            response = dynamodb.scan(
+                TableName='Fortunes-Table'
+            )
+            items = response['Items']
+            if len(items) > 0:
+                random_fortune = random.choice(items)['Fortunes']['S']
+                return {
+                    'statusCode': 200,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
+                    },
+                    'body': json.dumps({'message': 'Fortune retrieved successfully', 'Fortunes': random_fortune})
+                }
+            else:
+                return {
+                    'statusCode': 404,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
+                    },
+                    'body': json.dumps({'error': 'No fortunes available'})
+                }
             
         elif event['httpMethod'] == 'POST':
             # Handle POST request
@@ -70,3 +86,5 @@ def handler(event, context):
             },
             'body': json.dumps({'error': 'Internal Server Error'})
         }
+
+
