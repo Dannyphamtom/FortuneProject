@@ -24,7 +24,7 @@ def handler(event, context):
                     'statusCode': 200,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': 'https://www.dpfortuneprojectaws.com',
+                        'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
                     },
                     'body': json.dumps({'Fortunes': fortune})
                 }
@@ -33,7 +33,7 @@ def handler(event, context):
                     'statusCode': 404,
                     'headers': {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': 'https://www.dpfortuneprojectaws.com',
+                        'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
                     },
                     'body': json.dumps({'error': 'No fortunes found'})
                 }
@@ -43,7 +43,7 @@ def handler(event, context):
                 'statusCode': 405,
                 'headers': {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'https://www.dpfortuneprojectaws.com',
+                    'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
                 },
                 'body': json.dumps({'error': 'Method Not Allowed'})
             }
@@ -53,7 +53,7 @@ def handler(event, context):
             'statusCode': 500,
             'headers': {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'https://www.dpfortuneprojectaws.com',
+                'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
             },
             'body': json.dumps({'error': 'Internal Server Error'})
         }
