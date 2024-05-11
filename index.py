@@ -1,6 +1,5 @@
 import json
 import boto3
-import random
 
 # Initialize DynamoDB client
 dynamodb = boto3.client('dynamodb')
@@ -9,35 +8,49 @@ dynamodb = boto3.client('dynamodb')
 def handler(event, context):
     try:
         if event['httpMethod'] == 'GET':
-            # Scan DynamoDB to get all items
-            response = dynamodb.scan(
+            # Your existing GET request handling code
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
+                },
+                'body': json.dumps({'message': 'GET request received'})
+            }
+            
+        elif event['httpMethod'] == 'POST':
+            # Handle POST request
+            data = json.loads(event['body'])
+            fortune = data.get('Fortunes')
+            
+            # Write the received fortune to DynamoDB
+            response = dynamodb.put_item(
                 TableName='Fortunes-Table',
-                Select='ALL_ATTRIBUTES',
+                Item={
+                    'Fortunes': {'S': fortune}
+                }
             )
-            # Check if any items are found
-            if 'Items' in response and len(response['Items']) > 0:
-                # Get a random index within the range of items
-                random_index = random.randint(0, len(response['Items']) - 1)
-                # Get the fortune at the random index
-                fortune = response['Items'][random_index].get('Fortunes')
+            
+            # Check if the item was successfully written to DynamoDB
+            if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 return {
                     'statusCode': 200,
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
                     },
-                    'body': json.dumps({'Fortunes': fortune})
+                    'body': json.dumps({'message': 'Fortune submitted successfully', 'Fortunes': fortune})
                 }
             else:
                 return {
-                    'statusCode': 404,
+                    'statusCode': 500,
                     'headers': {
                         'Content-Type': 'application/json',
                         'Access-Control-Allow-Origin': 'https://dpfortuneprojectaws.com',
                     },
-                    'body': json.dumps({'error': 'No fortunes found'})
+                    'body': json.dumps({'error': 'Failed to submit Fortune to DynamoDB'})
                 }
-        # Handle other HTTP methods (POST, etc.) as needed
+                
         else:
             return {
                 'statusCode': 405,
