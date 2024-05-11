@@ -4,15 +4,9 @@ document.getElementById('get-fortune-btn').addEventListener('click', function() 
     fetch('https://ywtzp7u3v9.execute-api.us-east-1.amazonaws.com/Test/Fortune-Lambda')
         .then(response => response.json()) // Parse the JSON response
         .then(data => {
-            // Check if 'Fortunes' property exists and is not undefined
-            if (data && data.Fortunes && data.Fortunes.S) {
-                const fortune = data.Fortunes.S;
-                // Update the fortune container with the fetched fortune
-                document.getElementById('fortune-container').innerHTML = `<p>${fortune}</p>`;
-            } else {
-                console.error('Error: Fortune data is missing or in unexpected format');
-                document.getElementById('fortune-container').innerHTML = `<p>Error fetching fortune</p>`;
-            }
+            const fortune = data.Fortunes.S;
+            // Update the fortune container with the fetched fortune
+            document.getElementById('fortune-container').innerHTML = `<p>${fortune}</p>`;
         })
         .catch(error => {
             // Handle any errors
